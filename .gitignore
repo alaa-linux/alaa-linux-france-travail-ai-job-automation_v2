@@ -1,0 +1,22 @@
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Exports / datasets
+exports/
+*.csv
+
+# n8n sensitive runtime files
+.n8n/
+credentials.json
+
+# System / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/

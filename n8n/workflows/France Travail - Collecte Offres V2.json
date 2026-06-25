@@ -1,0 +1,3210 @@
+{
+  "name": "France Travail - Collecte Offres V2",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://jsonplaceholder.typicode.com/posts/1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -256,
+        -96
+      ],
+      "id": "8885242a-14bf-4ba7-b736-84ccf6c6e270",
+      "name": "HTTP Request",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d7a8e3e-c381-4bff-9fb8-5e1e487fa80c",
+              "name": "Nom : test",
+              "value": "={{ \"Post N°\" + $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "1c5f6daa-78e6-4f4c-bf6d-d1ef442a4ecd",
+              "name": "Nom : date_execution",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "24354b9b-79c7-497b-9387-64ee0fe9ac2b",
+              "name": "Nom : workflow_name",
+              "value": "={{ $workflow.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        -848
+      ],
+      "id": "4e7470b6-1c0e-4626-9153-2d8c10f8c751",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "motsCles",
+              "value": "= {{ $json.motsCles }}"
+            },
+            {
+              "name": "range",
+              "value": "={{ $json.range }}"
+            },
+            {
+              "name": "minCreationDate",
+              "value": "={{ $json.minCreationDate }}"
+            },
+            {
+              "name": "maxCreationDate",
+              "value": "= {{ $json.maxCreationDate }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization ",
+              "value": "=Bearer {{ $('Token France Travail').first().json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -192,
+        -864
+      ],
+      "id": "6ef923e3-3744-46ef-8549-428b0944644f",
+      "name": "France Travail - Offres",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4600da3b-0953-4810-acd3-80a3f046aca6",
+              "name": "nombre_offres",
+              "value": "={{ $json.resultats.length }}",
+              "type": "string"
+            },
+            {
+              "id": "504d7f43-4409-4213-9579-9fa4f5ea1df5",
+              "name": "range_utilise",
+              "value": "={{ \"0-4\" }}",
+              "type": "string"
+            },
+            {
+              "id": "a286f54a-6d05-47e9-a904-50984ad5513f",
+              "name": "premiere_offre",
+              "value": "={{ $json.resultats[0].intitule }}",
+              "type": "string"
+            },
+            {
+              "id": "8b4c3225-139a-432c-9f9d-3e2c19672750",
+              "name": "intitule_1",
+              "value": "={{ $json.resultats[0].intitule }}",
+              "type": "string"
+            },
+            {
+              "id": "0384931d-4c14-4059-a67e-de8db276ba51",
+              "name": "intitule_2",
+              "value": "={{ $json.resultats[1].intitule }}",
+              "type": "string"
+            },
+            {
+              "id": "bf95ae52-0d13-41b3-9745-9c95016d41fa",
+              "name": "intitule_3",
+              "value": "={{ $json.resultats[2].intitule }}",
+              "type": "string"
+            },
+            {
+              "id": "1d072d54-fbcc-4ca2-bfd6-36882adc6ee7",
+              "name": " entreprise_1",
+              "value": "={{ $json.resultats[0].entreprise.nom }}",
+              "type": "string"
+            },
+            {
+              "id": "7c6c4eac-a1e9-47d4-82ea-d2696a33119f",
+              "name": "entreprise_2",
+              "value": "={{ $json.resultats[1].entreprise.nom }}",
+              "type": "string"
+            },
+            {
+              "id": "15e92cd3-e546-406a-b9b2-b64840eed1ed",
+              "name": "entreprise_3",
+              "value": "={{ $json.resultats[2].entreprise.nom }}",
+              "type": "string"
+            },
+            {
+              "id": "85caef38-b284-4476-b707-bdbfbbf3f65a",
+              "name": "lieu_1",
+              "value": "={{ $json.resultats[0].lieuTravail.libelle }}",
+              "type": "string"
+            },
+            {
+              "id": "a66cd502-8b26-4131-9119-4831bd6930db",
+              "name": "lieu_2",
+              "value": "={{ $json.resultats[1].lieuTravail.libelle }}",
+              "type": "string"
+            },
+            {
+              "id": "7d99a4f8-05ab-4c53-bd5d-3f4ed68ce3c0",
+              "name": "lieu_3",
+              "value": "={{ $json.resultats[2].lieuTravail.libelle }}",
+              "type": "string"
+            },
+            {
+              "id": "da4b449b-6e1e-4fa4-afbb-6c650fe5d391",
+              "name": "contrat_1",
+              "value": "={{ $json.resultats[0].typeContrat }}",
+              "type": "string"
+            },
+            {
+              "id": "6db23978-dc0a-43a4-acb0-6eab564881d9",
+              "name": "contrat_2",
+              "value": "={{ $json.resultats[1].typeContrat }}",
+              "type": "string"
+            },
+            {
+              "id": "888d75d2-6a33-4030-ab00-bee45c952e4c",
+              "name": "contrat_3",
+              "value": "={{ $json.resultats[2].typeContrat }}",
+              "type": "string"
+            },
+            {
+              "id": "4f99b903-b71d-413d-8aae-bdfbb3b430b0",
+              "name": "description_1",
+              "value": "={{ $json.resultats[0].description }}",
+              "type": "string"
+            },
+            {
+              "id": "bdacda02-3dea-42aa-8f9b-b64d35f5454f",
+              "name": "longueur_description_1",
+              "value": "={{ $json.resultats[0].description.length }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2368,
+        -1312
+      ],
+      "id": "9b9d6ab7-1bb7-4779-b12b-911c8a3444d2",
+      "name": "Analyse Résultats"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41d63bee-510a-4f2d-80ee-d1db2c9c557e",
+              "name": "offre_id",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].id }}",
+              "type": "string"
+            },
+            {
+              "id": "64a36bc8-8c29-47dc-8d61-457f22c5bd18",
+              "name": "titre",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].intitule }}",
+              "type": "string"
+            },
+            {
+              "id": "15e37d0f-7174-45c0-928f-7dc33eafd14d",
+              "name": "entreprise",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].entreprise.nom }}",
+              "type": "string"
+            },
+            {
+              "id": "3e15e8e7-bc02-4592-870e-399ddfba7a5f",
+              "name": "lieu",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].lieuTravail.libelle }}",
+              "type": "string"
+            },
+            {
+              "id": "6d1274ce-64c8-4ded-8423-1c3e6619dfdb",
+              "name": "contrat",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].typeContrat }}",
+              "type": "string"
+            },
+            {
+              "id": "98f84e0c-667b-4d32-b8c3-8f0816adae87",
+              "name": "experience",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].experienceLibelle }}",
+              "type": "string"
+            },
+            {
+              "id": "2039bcfb-2a74-4fdc-956f-706f4054f148",
+              "name": "url",
+              "value": "={{ $('France Travail - Offres').item.json.resultats[0].origineOffre.urlOrigine }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2464,
+        -1520
+      ],
+      "id": "4023118a-da2d-4ca8-9208-55e44d512fc3",
+      "name": "Structure Simplifiée"
+    },
+    {
+      "parameters": {
+        "jsCode": "const offre = $('France Travail - Offres').item.json.resultats[0];\n\nconst titre = (offre.intitule || \"\").toLowerCase();\nconst description = (offre.description || \"\").toLowerCase();\nconst typeContrat = (offre.typeContrat || \"\").toLowerCase();\nconst typeContratLibelle = (offre.typeContratLibelle || \"\").toLowerCase();\nconst alternanceApi = offre.alternance === true;\n\nconst motsCles = [\n  \"devops\",\n  \"linux\",\n  \"docker\",\n  \"kubernetes\",\n  \"k8s\",\n  \"terraform\",\n  \"ansible\",\n  \"gitlab\",\n  \"github actions\",\n  \"ci/cd\",\n  \"aws\",\n  \"azure\",\n  \"gcp\",\n  \"cloud\"\n];\n\nconst motsClesAlternance = [\n  \"alternance\",\n  \"apprentissage\",\n  \"contrat apprentissage\",\n  \"professionnalisation\",\n  \"contrat pro\",\n  \"stage\"\n];\n\nconst texteGlobal = `${titre} ${description} ${typeContrat} ${typeContratLibelle}`;\n\nconst motsTrouves = motsCles.filter(mot =>\n  texteGlobal.includes(mot.toLowerCase())\n);\n\nconst motsAlternanceTrouves = motsClesAlternance.filter(mot =>\n  texteGlobal.includes(mot.toLowerCase())\n);\n\nconst alternanceDetectee =\n  alternanceApi ||\n  motsAlternanceTrouves.length > 0;\n\nreturn [\n  {\n    json: {\n      titre: offre.intitule,\n      contrat: offre.typeContrat,\n      contrat_libelle: offre.typeContratLibelle,\n      alternance_api: alternanceApi,\n      mots_cles_trouves: motsTrouves,\n      nombre_mots_cles: motsTrouves.length,\n      mots_alternance_trouves: motsAlternanceTrouves,\n      alternance_detectee: alternanceDetectee\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        -1264
+      ],
+      "id": "55ee4531-d1f8-4715-8cfc-0cd0efbfa01a",
+      "name": "Moteur Mots Clés"
+    },
+    {
+      "parameters": {
+        "jsCode": "const pages = $input.all();\n\nlet toutesLesOffres = [];\n\nfor (const page of pages) {\n  const offresPage = page.json.resultats || page.json.results || [];\n  toutesLesOffres.push(...offresPage);\n}\n\nconst vus = new Set();\nconst offresUniques = [];\nconst doublons = [];\n\nfor (const offre of toutesLesOffres) {\n  const id = offre.id || '';\n  const url = offre.origineOffre?.urlOrigine || '';\n  const cle = id || url;\n\n  if (!cle) continue;\n\n  if (vus.has(cle)) {\n    doublons.push({\n      id,\n      url,\n      intitule: offre.intitule || ''\n    });\n  } else {\n    vus.add(cle);\n    offresUniques.push(offre);\n  }\n}\n\nreturn [\n  {\n    json: {\n      nombre_pages: pages.length,\n      nombre_initial: toutesLesOffres.length,\n      nombre_uniques: offresUniques.length,\n      doublons_supprimes: doublons.length,\n      ids_uniques: offresUniques.map(o => o.id),\n      offres_uniques: offresUniques\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -1072
+      ],
+      "id": "1b56a242-48f5-41b8-bfc7-8457e61bba94",
+      "name": "Suppression Doublons"
+    },
+    {
+      "parameters": {
+        "jsCode": "const offre = $('France Travail - Offres').item.json.resultats[0];\n\nconst texte =\n`${offre.intitule}\n${offre.description}\n${offre.typeContrat}\n${offre.typeContratLibelle}`.toLowerCase();\n\nlet score = 0;\n\nconst devops = [\n  \"devops\",\n  \"gitlab\",\n  \"github actions\",\n  \"jenkins\",\n  \"terraform\",\n  \"ansible\",\n  \"ci/cd\",\n  \"linux\"\n];\n\nconst cloud = [\n  \"aws\",\n  \"azure\",\n  \"gcp\",\n  \"cloud\"\n];\n\nconst kubernetes = [\n  \"kubernetes\",\n  \"k8s\",\n  \"helm\",\n  \"openshift\",\n  \"eks\",\n  \"aks\"\n];\n\nconst docker = [\n  \"docker\",\n  \"container\",\n  \"containers\",\n  \"podman\"\n];\n\nconst alternance = [\n  \"alternance\",\n  \"apprentissage\",\n  \"contrat pro\",\n  \"professionnalisation\"\n];\n\nif (devops.some(m => texte.includes(m))) score += 40;\nif (cloud.some(m => texte.includes(m))) score += 20;\nif (kubernetes.some(m => texte.includes(m))) score += 15;\nif (docker.some(m => texte.includes(m))) score += 15;\nif (alternance.some(m => texte.includes(m))) score += 10;\n\nreturn [\n  {\n    json: {\n      titre: offre.intitule,\n      score_pertinence: score\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        -1024
+      ],
+      "id": "3cc391cc-6ed0-436c-959d-651334d4744e",
+      "name": "Score Pertinence"
+    },
+    {
+      "parameters": {
+        "jsCode": "const offres = $json.offres_uniques || [];\n\nconst offresTriees = offres.sort((a, b) => {\n  const dateA = new Date(a.dateCreation || 0);\n  const dateB = new Date(b.dateCreation || 0);\n\n  return dateB - dateA;\n});\n\nreturn [\n  {\n    json: {\n      nombre_total: offresTriees.length,\n      offres_triees: offresTriees\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        -1008
+      ],
+      "id": "126ecc7a-911f-45f6-9d32-c4581327a50f",
+      "name": "Tri Offres"
+    },
+    {
+      "parameters": {
+        "jsCode": "const offresTriees = $('Tri Offres').item.json.offres_triees || [];\n\nconst limite = 3000;\n\nconst topOffres = offresTriees.slice(0, limite);\n\nreturn [\n  {\n    json: {\n      limite,\n      nombre_total: offresTriees.length,\n      nombre_selectionne: topOffres.length,\n      top_offres: topOffres\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -688
+      ],
+      "id": "15e19654-a510-40f6-866f-c4d9162a631c",
+      "name": "Top Offres"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1792,
+        -1648
+      ],
+      "id": "14963438-67f9-4425-a993-3c846c626a7c",
+      "name": "Préparer Insertion SQL"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.GMAIL_FROM }}",
+        "toEmail": "={{ $env.GMAIL_TO }}",
+        "subject": "Top offres DevOps - France Travail",
+        "html": "=<h2>Top offres DevOps détectées</h2>\n\n<p>Bonjour Alaa,</p>\n\n<p>\nVoici les meilleures offres récupérées depuis France Travail par ton workflow n8n.\n</p>\n\n<hr>\n\n<h3>Résumé</h3>\n<ul>\n  <li>Source : France Travail</li>\n  <li>Workflow : France Travail - Collecte Offres V1</li>\n  <li>Date collecte : {{ $now.toFormat('dd/MM/yyyy') }}</li>\n  <li>Heure exécution : {{ $now.toFormat('HH:mm:ss') }}</li>\n</ul>\n\n\n<hr>\n\n<h3>Offres</h3>\n\n{{\n$('Top Offres').item.json.top_offres.map((offre, index) => `\n<div style=\"border:1px solid #ddd; padding:12px; margin-bottom:12px; border-radius:6px;\">\n\n  <h4>${index + 1}. ${offre.titre}</h4>\n\n  <p><strong>Entreprise :</strong> ${offre.entreprise}</p>\n\n  <p><strong>Ville :</strong> ${offre.lieu}</p>\n\n  <p><strong>Contrat :</strong> ${offre.contrat}</p>\n\n  <p><strong>Score :</strong> ${offre.score_pertinence}/100</p>\n\n  <p>\n    <a href=\"${offre.url}\" target=\"_blank\">\n      🔗 Voir l'offre sur France Travail\n    </a>\n  </p>\n\n</div>\n`).join('')\n}}\n\n<hr>\n\n<p>\nEmail envoyé automatiquement depuis n8n.\n</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2656,
+        -752
+      ],
+      "id": "bb1db8cf-4011-47a0-8533-58c44a0eaefc",
+      "name": "Send an Email",
+      "webhookId": "b90f83a7-f823-4b15-ab05-c9a97e1f8c96",
+      "alwaysOutputData": false,
+      "credentials": {
+        "smtp": {
+          "id": "8d9UmRPlMc0V0qCb",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        48
+      ],
+      "id": "7ce819ac-2513-47e4-a02c-2687a773c188",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "workflow_logs",
+          "mode": "list",
+          "cachedResultName": "workflow_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date_execution": "={{ $now.toISO() }}",
+            "nombre_offres": "={{ $('Top Offres').item.json.nombre_total }}",
+            "nombre_top_offres": "={{ $('Top Offres').item.json.nombre_selectionne }}",
+            "statut": "SUCCESS",
+            "duree_ms": 0,
+            "id": 0
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_execution",
+              "displayName": "date_execution",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre_offres",
+              "displayName": "nombre_offres",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre_top_offres",
+              "displayName": "nombre_top_offres",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "duree_ms",
+              "displayName": "duree_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3024,
+        -880
+      ],
+      "id": "17041b4c-a632-4a11-8715-8f49497fbbac",
+      "name": "Insert rows in a table1",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.GMAIL_FROM }}",
+        "toEmail": "={{ $env.GMAIL_TO }}",
+        "subject": "ERREUR - Workflow France Travail",
+        "html": "=<h2>Erreur workflow France Travail</h2>\n\n<p>Bonjour Alaa,</p>\n\n<p>\nUne erreur a été détectée pendant l'exécution automatique du workflow.\n</p>\n\n<hr>\n\n<h3>Détails</h3>\n\n<ul>\n  <li>Workflow : France Travail - Collecte Offres V1</li>\n  <li>Date : {{ $now.toFormat('dd/MM/yyyy') }}</li>\n  <li>Heure : {{ $now.toFormat('HH:mm:ss') }}</li>\n  <li>Statut : ERROR</li>\n</ul>\n\n<hr>\n\n<p>\nVérifie dans n8n le node en erreur et les logs d'exécution.\n</p>\n\n<p>\nEmail automatique envoyé depuis n8n.\n</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        128
+      ],
+      "id": "a5ea169e-3929-45c1-a50c-d0c91de07b08",
+      "name": "Email Erreur",
+      "webhookId": "b90f83a7-f823-4b15-ab05-c9a97e1f8c96",
+      "alwaysOutputData": false,
+      "credentials": {
+        "smtp": {
+          "id": "8d9UmRPlMc0V0qCb",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://172.17.0.1:11434/api/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gemma3:1b "
+            },
+            {
+              "name": "prompt",
+              "value": "=Tu es un expert du recrutement informatique.\n\nAnalyse cette offre pour le profil suivant.\n\n========================================\nPROFIL CANDIDAT\n========================================\n\nÉtudiant en Bachelor DevOps.\n\nFormation :\n\n- Bachelor DevOps (en cours)\n\nCompétences :\n\n- Linux\n- Windows Server\n- Réseaux TCP/IP\n- Active Directory\n- Docker\n- Kubernetes\n- Terraform\n- Git\n- GitHub Actions\n- CI/CD\n- PostgreSQL\n- Spring Boot\n- Angular\n- API REST\n- JSON\n- Bash\n- PowerShell\n- Automatisation\n- n8n\n- Virtualisation\n\nObjectif professionnel :\n\nRecherche en priorité :\n\n- Alternance DevOps\n- Alternance Cloud\n- Alternance Automatisation\n- Alternance Intégration\n- Alternance Infrastructure\n- Alternance Administration Systèmes\n- Alternance Administration Réseaux\n- Alternance Support Informatique évolutif\n- Développeur Backend Junior\n- Développeur Fullstack Junior\n\nRecherche secondaire :\n\n- Data Analyst Junior\n- Data Engineer Junior\n- Data Scientist Junior\n- AI Engineer Junior\n\nContraintes importantes :\n\n- Débutant\n- Expérience professionnelle limitée\n- Bachelor en cours\n- Bac+3\n- Recherche alternance en priorité\n- Contrat professionnalisation accepté\n- Contrat apprentissage accepté\n\n========================================\nRÈGLES DE NOTATION\n========================================\n\nLe score doit tenir compte fortement :\n\n1. Du type de contrat\n2. Du niveau d'expérience demandé\n3. Du niveau de diplôme demandé\n4. De la compatibilité technique\n5. De la localisation\n\nUne offre d'alternance doit être fortement favorisée.\n\nUne offre acceptant les profils débutants doit être fortement favorisée.\n\nUne offre demandant 3 ans ou plus d'expérience doit être fortement pénalisée même si elle correspond techniquement.\n\nUne offre demandant 5 ans ou plus d'expérience ne doit jamais obtenir plus de 40/100.\n\nUne offre CDI destinée à un profil expérimenté doit être fortement pénalisée.\n\nUne offre Bac+5 ou Ingénieur doit être pénalisée.\n\nUne offre Bac+2, Bac+3 ou Bachelor doit être favorisée.\n\n========================================\nOFFRE À ANALYSER\n========================================\n\nTitre :\n{{$json.titre}}\n\nEntreprise :\n{{$json.entreprise}}\n\nContrat :\n{{$json.type_contrat_libelle}}\n\nDescription :\n{{ $json.description.slice(0, 1200) }}\n\n\nLieu :\n{{$json.lieu}}\n\nDescription :\n{{$json.description}}\n\n========================================\nFORMAT DE RÉPONSE\n========================================\n\nIMPORTANT :\n\n- Réponds uniquement en JSON valide\n- Aucun markdown\n- Aucun texte avant ou après le JSON\n- Aucun commentaire\n- Aucun bloc ```json\n- Aucun champ thinking\n- score_ia doit être un entier entre 0 et 100\n\n{\n  \"resume\":\"\",\n  \"score_ia\":0,\n  \"competences_detectees\":[],\n  \"points_forts\":[],\n  \"points_faibles\":[],\n  \"recommandation\":\"\",\n  \"classement\":\"\"\n}"
+            },
+            {
+              "name": "stream",
+              "value": "={{ false }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        992,
+        -800
+      ],
+      "id": "eb6343d8-d094-4ac0-8ec4-8c4291e2e994",
+      "name": "Analyse IA Ollama",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=/partenaire",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "client_credentials"
+            },
+            {
+              "name": "client_id",
+              "value": "={{ $env.FRANCE_TRAVAIL_CLIENT_ID }}"
+            },
+            {
+              "name": "client_secret",
+              "value": "={{ $env.FRANCE_TRAVAIL_CLIENT_SECRET }}"
+            },
+            {
+              "name": "scope",
+              "value": "api_offresdemploiv2 o2dsoffre"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -576,
+        -400
+      ],
+      "id": "fa10ef2b-974f-4aae-8eec-45cd29cde100",
+      "name": "Token France Travail"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "top_offres",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        384,
+        -864
+      ],
+      "id": "586c216f-623c-4bc7-84ec-961e866fb8b8",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const item = $json;\n\nconst raw = item.response || '';\nconst model = item.model || item.modele_ia || 'unknown';\nconst done = item.done ?? false;\nconst doneReason = item.done_reason || null;\n\nlet cleaned = raw\n  .replace(/```json/g, '')\n  .replace(/```/g, '')\n  .trim();\n\n// Corrige les objets bizarres du type {\"Bash\"} => \"Bash\"\ncleaned = cleaned.replace(/\\{\\s*\"([^\"]+)\"\\s*\\}/g, '\"$1\"');\n\nlet parsed = {};\nlet erreur_ia = false;\nlet type_erreur_ia = null;\nlet message_erreur_ia = null;\n\nif (!raw || raw.trim() === '') {\n  erreur_ia = true;\n  type_erreur_ia = 'REPONSE_VIDE';\n  message_erreur_ia = 'La réponse Ollama est vide.';\n}\n\nif (!erreur_ia) {\n  try {\n    const firstBrace = cleaned.indexOf('{');\n    const lastBrace = cleaned.lastIndexOf('}');\n\n    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n      cleaned = cleaned.slice(firstBrace, lastBrace + 1);\n    }\n\n    parsed = JSON.parse(cleaned);\n  } catch (error) {\n    erreur_ia = true;\n    type_erreur_ia = 'JSON_INVALIDE';\n    message_erreur_ia = error.message;\n\n    parsed = {\n      resume: cleaned,\n      score_ia: 0,\n      competences_detectees: [],\n      points_forts: [],\n      points_faibles: ['Réponse IA non JSON ou JSON invalide'],\n      recommandation: 'Parser à corriger ou modèle IA à changer',\n      classement: 'Erreur IA'\n    };\n  }\n}\n\nconst competences =\n  parsed.competences_detectees ||\n  parsed.skills_detectees ||\n  parsed['.skills_detectees'] ||\n  [];\n\nconst recommandation =\n  parsed.recommandation ||\n  parsed.recommandations ||\n  '';\n\nreturn {\n  json: {\n    ...item,\n\n    erreur_ia,\n    type_erreur_ia,\n    message_erreur_ia,\n\n    resume: parsed.resume || '',\n    score_ia: Number(parsed.score_ia) || 0,\n    competences_detectees: Array.isArray(competences)\n      ? competences.flat().map(String)\n      : [],\n    points_forts: Array.isArray(parsed.points_forts)\n      ? parsed.points_forts.flat().map(String)\n      : [],\n    points_faibles: Array.isArray(parsed.points_faibles)\n      ? parsed.points_faibles.flat().map(String)\n      : [],\n    recommandation: Array.isArray(recommandation)\n      ? recommandation.join(', ')\n      : String(recommandation || ''),\n    classement: String(parsed.classement || ''),\n\n    modele_ia: model,\n    done,\n    done_reason: doneReason\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        -512
+      ],
+      "id": "595c2dad-9238-4118-82a5-6f6d609868ed",
+      "name": "Parser Réponse IA"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const offre = $json;\n\nlet score_contrat = 0;\nlet score_experience = 0;\nlet score_diplome = 0;\nlet score_metier = 0;\n\nconst texte = `\n${offre.titre || ''}\n${offre.type_contrat_libelle || ''}\n${offre.contrat || ''}\n${offre.experience || ''}\n${offre.description || ''}\n`.toLowerCase();\n\n\n// ========================================\n// FLAGS IMPORTANTS POUR CSV / BASE\n// ========================================\n\nconst debutant_accepte =\n  texte.includes('débutant accepté') ||\n  texte.includes('debutant accepte') ||\n  texte.includes('débutant') ||\n  texte.includes('debutant') ||\n  texte.includes('junior');\n\nconst contrat_professionnalisation =\n  texte.includes('professionnalisation') ||\n  texte.includes('contrat pro') ||\n  texte.includes('contrat de professionnalisation');\n\nconst contrat_apprentissage =\n  texte.includes('apprentissage') ||\n  texte.includes('contrat apprentissage') ||\n  texte.includes('contrat d’apprentissage') ||\n  texte.includes(\"contrat d'apprentissage\");\n\n\n// ========================================\n// CONTRAT\n// ========================================\n\nif (texte.includes('alternance')) score_contrat += 40;\nif (contrat_apprentissage) score_contrat += 40;\nif (contrat_professionnalisation) score_contrat += 40;\n\nif (texte.includes('cdd')) score_contrat += 10;\n\nif (texte.includes('cdi')) score_contrat -= 20;\n\n\n// ========================================\n// EXPERIENCE\n// ========================================\n\nif (debutant_accepte) {\n  score_experience += 40;\n}\nelse if (\n  texte.includes('1 an') ||\n  texte.includes('12 mois')\n) {\n  score_experience += 20;\n}\nelse if (texte.includes('2 an')) {\n  score_experience -= 10;\n}\nelse if (texte.includes('3 an')) {\n  score_experience -= 30;\n}\nelse if (\n  texte.includes('4 an') ||\n  texte.includes('5 an') ||\n  texte.includes('10 an')\n) {\n  score_experience -= 60;\n}\n\n\n// ========================================\n// DIPLOME\n// ========================================\n\nif (texte.includes('bac+2') || texte.includes('bac +2')) score_diplome += 20;\n\nif (\n  texte.includes('bac+3') ||\n  texte.includes('bac +3') ||\n  texte.includes('bachelor')\n) {\n  score_diplome += 20;\n}\n\nif (\n  texte.includes('bac+5') ||\n  texte.includes('bac +5') ||\n  texte.includes('ingénieur') ||\n  texte.includes('ingenieur')\n) {\n  score_diplome -= 20;\n}\n\n\n// ========================================\n// METIER\n// ========================================\n\nif (\n  texte.includes('devops') ||\n  texte.includes('cloud') ||\n  texte.includes('sre') ||\n  texte.includes('linux') ||\n  texte.includes('docker') ||\n  texte.includes('kubernetes') ||\n  texte.includes('terraform') ||\n  texte.includes('administrateur système') ||\n  texte.includes('administrateur reseau') ||\n  texte.includes('administrateur réseau') ||\n  texte.includes('systèmes et réseaux') ||\n  texte.includes('systemes et reseaux') ||\n  texte.includes('support informatique') ||\n  texte.includes('technicien informatique') ||\n  texte.includes('développeur') ||\n  texte.includes('developpeur') ||\n  texte.includes('developer') ||\n  texte.includes('backend') ||\n  texte.includes('fullstack') ||\n  texte.includes('data analyst') ||\n  texte.includes('data engineer') ||\n  texte.includes('data scientist') ||\n  texte.includes('ai engineer') ||\n  texte.includes('intelligence artificielle')\n) {\n  score_metier += 20;\n}\n\nif (\n  texte.includes('vendeur') ||\n  texte.includes('vente') ||\n  texte.includes('commercial') ||\n  texte.includes('caissier') ||\n  texte.includes('caissière') ||\n  texte.includes('conseiller de vente') ||\n  texte.includes('magasin') ||\n  texte.includes('opérateur de saisie') ||\n  texte.includes('operateur de saisie') ||\n  texte.includes('saisie informatique') ||\n  texte.includes('gestionnaire de saisie') ||\n  texte.includes('relation client') ||\n  texte.includes('bureautique') ||\n  texte.includes('flottes automobiles') ||\n  texte.includes('appels entrants') ||\n  texte.includes('rendez-vous') ||\n  texte.includes('excel') ||\n  texte.includes('word')\n) {\n  score_metier -= 60;\n}\n\nif (\n  texte.includes('directeur') ||\n  texte.includes('dirigeant') ||\n  texte.includes('responsable de département') ||\n  texte.includes('head of') ||\n  texte.includes('manager senior')\n) {\n  score_metier -= 80;\n}\n\n\n// ========================================\n// SCORE REGLES\n// ========================================\n\nlet score_regles =\n  50 +\n  score_contrat +\n  score_experience +\n  score_diplome +\n  score_metier;\n\nif (score_regles > 100) score_regles = 100;\nif (score_regles < 0) score_regles = 0;\n\n\n// ========================================\n// CLASSEMENT REGLES\n// ========================================\n\nlet classement = '';\n\nif (score_regles >= 80) {\n  classement = 'Tres pertinent';\n}\nelse if (score_regles >= 60) {\n  classement = 'Pertinent';\n}\nelse if (score_regles >= 40) {\n  classement = 'Moyen';\n}\nelse {\n  classement = 'Faible';\n}\n\n\n// ========================================\n// RETURN\n// ========================================\n\nreturn {\n  json: {\n    ...offre,\n    debutant_accepte,\n    contrat_professionnalisation,\n    contrat_apprentissage,\n    score_contrat,\n    score_experience,\n    score_diplome,\n    score_metier,\n    score_regles,\n    classement\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -640
+      ],
+      "id": "a1ac9d5b-10df-485b-9a8e-39744e35bcc0",
+      "name": "Score Règles Candidat"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8db68850-004c-44cf-8fe3-6d492ae0e154",
+              "leftValue": "={{$json.score_regles}}",
+              "rightValue": 40,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        656,
+        -992
+      ],
+      "id": "6b98d728-ca72-495b-9da8-9e35a6bfe8a3",
+      "name": "Filtre Score Règles"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const offre = $json;\n\nlet score_ia = Number(offre.score_ia) || 0;\n\n// Si l'IA renvoie 0.85 au lieu de 85\nif (score_ia > 0 && score_ia <= 1) {\n  score_ia = Math.round(score_ia * 100);\n}\n\nconst score_regles = Number(offre.score_regles) || 0;\n\nlet score_final;\n\n// Si l'IA ne donne pas de score fiable, on garde le score règles\nif (score_ia <= 0) {\n  score_final = score_regles;\n} else {\n  // 70% règles fiables + 30% IA\n  score_final = Math.round((score_regles * 0.7) + (score_ia * 0.3));\n}\n\nif (score_final > 100) score_final = 100;\nif (score_final < 0) score_final = 0;\n\nreturn {\n  json: {\n    ...offre,\n    score_ia,\n    score_final\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        -416
+      ],
+      "id": "493bc714-e612-44a5-9154-a2634ab3ded2",
+      "name": "Fusion Score Final"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const offre = $json;\n\nlet classement = '';\n\nif (offre.score_final >= 80) {\n  classement = 'Très pertinent';\n}\nelse if (offre.score_final >= 60) {\n  classement = 'Pertinent';\n}\nelse if (offre.score_final >= 40) {\n  classement = 'Moyen';\n}\nelse {\n  classement = 'Faible';\n}\n\nreturn {\n  json: {\n    ...offre,\n    classement_final: classement\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        -944
+      ],
+      "id": "5b81b32e-f093-459a-be35-e052cfce1054",
+      "name": "Classement Final"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        192
+      ],
+      "id": "515fdb1e-6b39-4349-8fad-93cd50ddf561",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "offres",
+          "mode": "list",
+          "cachedResultName": "offres"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "alternance": "={{ $json.alternance === true || $json.alternance === 'true' }}",
+            "debutant_accepte": "={{ $json.debutant_accepte === true || $json.debutant_accepte === 'true' }}",
+            "contrat_professionnalisation": "={{ $json.contrat_professionnalisation === true || $json.contrat_professionnalisation === 'true' }}",
+            "contrat_apprentissage": "={{ $json.contrat_apprentissage === true || $json.contrat_apprentissage === 'true' }}",
+            "offre_id": "={{ $json.offre_id }}",
+            "titre": "={{ $json.titre }}",
+            "entreprise": "={{ $json.entreprise }}",
+            "ville": "={{ $json.ville || $json.lieu }}",
+            "lieu": "={{ $json.lieu || $json.ville }}",
+            "contrat": "={{ $json.contrat }}",
+            "score": "={{ $json.score_pertinence }}",
+            "date_collecte": "={{ $now.toISO() }}",
+            "experience": "={{ $json.experience }}",
+            "description": "={{ $json.description }}",
+            "url": "={{ $json.url }}",
+            "code_postal": "={{ $json.code_postal }}",
+            "type_contrat_libelle": "={{ $json.type_contrat_libelle }}",
+            "salaire": "={{ $json.salaire }}",
+            "date_creation": "={{ $json.date_creation }}",
+            "date_actualisation": "={{ $json.date_actualisation }}",
+            "rome_code": "={{ $json.rome_code }}",
+            "rome_libelle": "={{ $json.rome_libelle }}",
+            "competences_json": "={{ { \"items\": JSON.parse($json.competences_json || '[]') } }}",
+            "score_pertinence": "={{ $json.score_pertinence }}",
+            "score_contrat": "={{ $json.score_contrat }}",
+            "score_experience": "={{ $json.score_experience }}",
+            "score_diplome": "={{ $json.score_diplome }}",
+            "score_metier": "={{ $json.score_metier }}\n",
+            "score_regles": "={{ $json.score_regles }}",
+            "score_ia": "={{ $json.score_ia }}",
+            "score_final": "={{ $json.score_final }}",
+            "classement_final": "={{ $json.classement_final }}",
+            "resume_ia": "={{ $json.resume }}",
+            "competences_ia": "={{ JSON.stringify($json.competences_detectees || []) }}",
+            "points_forts_ia": "={{ JSON.stringify($json.points_forts || []) }}",
+            "points_faibles_ia": "={{ JSON.stringify($json.points_faibles || []) }}",
+            "recommandation_ia": "={{ $json.recommandation }}",
+            "modele_ia": "phi4",
+            "date_analyse_ia": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [
+            "offre_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "titre",
+              "displayName": "titre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "entreprise",
+              "displayName": "entreprise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "ville",
+              "displayName": "ville",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "contrat",
+              "displayName": "contrat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "date_collecte",
+              "displayName": "date_collecte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "experience",
+              "displayName": "experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "code_postal",
+              "displayName": "code_postal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "type_contrat_libelle",
+              "displayName": "type_contrat_libelle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "salaire",
+              "displayName": "salaire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "date_creation",
+              "displayName": "date_creation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "date_actualisation",
+              "displayName": "date_actualisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "alternance",
+              "displayName": "alternance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "rome_code",
+              "displayName": "rome_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "rome_libelle",
+              "displayName": "rome_libelle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "competences_json",
+              "displayName": "competences_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "lieu",
+              "displayName": "lieu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "debutant_accepte",
+              "displayName": "debutant_accepte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "contrat_professionnalisation",
+              "displayName": "contrat_professionnalisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "contrat_apprentissage",
+              "displayName": "contrat_apprentissage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_pertinence",
+              "displayName": "score_pertinence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_contrat",
+              "displayName": "score_contrat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_experience",
+              "displayName": "score_experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_diplome",
+              "displayName": "score_diplome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_metier",
+              "displayName": "score_metier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_regles",
+              "displayName": "score_regles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_ia",
+              "displayName": "score_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "score_final",
+              "displayName": "score_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "classement_final",
+              "displayName": "classement_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "resume_ia",
+              "displayName": "resume_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "competences_ia",
+              "displayName": "competences_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "points_forts_ia",
+              "displayName": "points_forts_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "points_faibles_ia",
+              "displayName": "points_faibles_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "recommandation_ia",
+              "displayName": "recommandation_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "modele_ia",
+              "displayName": "modele_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "date_analyse_ia",
+              "displayName": "date_analyse_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2144,
+        -1376
+      ],
+      "id": "bd01d531-0c41-444f-9b1d-366ca298b829",
+      "name": "Insert or update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "709f838a-c68a-43f1-950c-a6b9bf2b3d18",
+              "leftValue": "={{ $json.score_final }}",
+              "rightValue": 75,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1264,
+        -1552
+      ],
+      "id": "9c52c6af-3ff6-4e2e-a772-1437070f8ebf",
+      "name": "IF Score"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b7971d1-c0d6-48fd-be4d-b84bd345d4dc",
+              "name": "prompt_lm",
+              "value": "=Tu es un assistant expert en rédaction de candidatures informatiques.\n\nRédige une lettre de motivation courte, professionnelle et réaliste.\n\n====================================================\nOFFRE\n====================================================\n\nEntreprise :\n{{ $json.entreprise || \"votre entreprise\" }}\n\nPoste :\n{{ $json.titre }}\n\nVille :\n{{ $json.ville || $json.lieu }}\n\nContrat :\n{{ $json.type_contrat_libelle || $json.contrat }}\n\nExpérience demandée :\n{{ $json.experience }}\n\nDescription :\n{{ $json.description }}\n\n====================================================\nPROFIL CANDIDAT\n====================================================\n\nJe suis étudiant en Bachelor DevOps en cours.\n\nCompétences :\nLinux, Windows Server, réseaux TCP/IP, Active Directory, Docker, Kubernetes, Terraform, Git, GitHub Actions, CI/CD, PostgreSQL, Spring Boot, Angular, API REST, JSON, Bash, PowerShell, automatisation, n8n, virtualisation.\n\nObjectif :\nJe recherche prioritairement une alternance, un contrat de professionnalisation, un contrat d’apprentissage, ou un poste CDI/CDD acceptant les profils débutants.\n\nDomaines recherchés :\nDevOps, Cloud, Infrastructure, Administration systèmes, Administration réseaux, Support informatique évolutif, Automatisation, Développement backend junior ou fullstack junior.\n\nContraintes :\nJe suis débutant, en Bachelor DevOps, avec peu d'expérience professionnelle. Je veux progresser, apprendre et mettre en pratique mes compétences.\n\n====================================================\nRÈGLES IMPORTANTES\n====================================================\n\nNe jamais inventer d’expérience professionnelle, de stage, de mission, de responsabilité, de diplôme, de certification ou de projet.\n\nNe jamais écrire :\n- j'ai plusieurs années d'expérience\n- je suis expert\n- je maîtrise parfaitement\n- je possède une forte expérience\n- j'ai déjà réalisé ce type de mission\n\nNe jamais prétendre avoir réalisé des migrations d'infrastructure, administré une infrastructure de production, dirigé une équipe ou occupé un poste similaire.\n\nNe jamais présenter mes compétences comme un niveau expert.\n\nUtiliser des formulations prudentes :\n- connaissances de\n- notions de\n- bases en\n- compétences acquises durant la formation\n- souhait de développer ces compétences\n- motivation à apprendre\n- envie de progresser\n\nPréférer :\n\"je souhaite développer mes compétences\"\nà :\n\"je maîtrise\"\n\nPréférer :\n\"j'ai acquis des bases en\"\nà :\n\"je suis expert en\"\n\nSi l'offre demande beaucoup d'expérience, rester honnête et mettre en avant la motivation, la capacité d'apprentissage et les compétences acquises pendant la formation.\n\nSi l'offre est une alternance ou accepte les débutants, valoriser fortement la motivation, la formation actuelle et l'envie d'apprendre.\n\nLa lettre doit être adaptée aux missions réellement présentes dans l'offre.\n\nRéutiliser naturellement les mots-clés importants de l'annonce.\n\nNe jamais copier intégralement la description du poste.\nRÈGLES DE PRUDENCE SUPPLÉMENTAIRES :\n\n- Ne jamais écrire \"bases solides\".\n- Écrire plutôt \"bases\", \"notions\", \"premières connaissances\" ou \"connaissances acquises en formation\".\n- Ne jamais écrire que l'offre correspond précisément à mon objectif si ce n'est pas une alternance, un apprentissage, un contrat de professionnalisation ou un poste débutant accepté.\n- Si le contrat n'est pas une alternance et ne mentionne pas débutant accepté, rester prudent.\n- Maximum 170 mots.\n- Faire 4 paragraphes maximum.\n==========================================\n==========\nFORMAT DE SORTIE\n====================================================\n\nRetourne uniquement la lettre finale.\n\nPas de JSON.\nPas de Markdown.\nPas de titre.\nPas d’objet.\nPas de coordonnées.\nPas de placeholders.\nPas de [Nom du poste].\nPas de [Votre formation].\nPas de [Compétence 1].\nPas de [Votre Nom].\nPas d’explication après la lettre.\n\nLa lettre doit commencer exactement par :\n\nMadame, Monsieur,\n\nLa lettre doit se terminer par :\n\nCordialement,",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        -1280
+      ],
+      "id": "43516795-218d-4fe9-994c-c5fc722fa846",
+      "name": "Préparer Prompt LM"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://172.17.0.1:11434/api/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "phi4"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.prompt_lm }}"
+            },
+            {
+              "name": "stream",
+              "value": "={{ false }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1648,
+        -1152
+      ],
+      "id": "12b2ae4a-fab8-45b9-b0d8-cd025e0d9f61",
+      "name": "Génération LM Ollama"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const lettre = ($json.response || '').trim();\n\nreturn {\n  json: {\n    ...$json,\n    lettre_brouillon: lettre\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        -592
+      ],
+      "id": "a86001e0-5f33-495a-b53e-74065b9d7817",
+      "name": "Parser LM"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2160,
+        -896
+      ],
+      "id": "b3b57d0a-7e13-402c-80ef-471067042ef0",
+      "name": "Merge LM"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "offres"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "offre_id": "={{ $json.offre_id }}",
+            "lettre_brouillon": "={{ $json.lettre_brouillon }}"
+          },
+          "matchingColumns": [
+            "offre_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "titre",
+              "displayName": "titre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "entreprise",
+              "displayName": "entreprise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "ville",
+              "displayName": "ville",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "contrat",
+              "displayName": "contrat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "date_collecte",
+              "displayName": "date_collecte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "experience",
+              "displayName": "experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "code_postal",
+              "displayName": "code_postal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "type_contrat_libelle",
+              "displayName": "type_contrat_libelle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "salaire",
+              "displayName": "salaire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "date_creation",
+              "displayName": "date_creation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "date_actualisation",
+              "displayName": "date_actualisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "alternance",
+              "displayName": "alternance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "rome_code",
+              "displayName": "rome_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "rome_libelle",
+              "displayName": "rome_libelle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "competences_json",
+              "displayName": "competences_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "lieu",
+              "displayName": "lieu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "debutant_accepte",
+              "displayName": "debutant_accepte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "contrat_professionnalisation",
+              "displayName": "contrat_professionnalisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "contrat_apprentissage",
+              "displayName": "contrat_apprentissage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_pertinence",
+              "displayName": "score_pertinence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_contrat",
+              "displayName": "score_contrat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_experience",
+              "displayName": "score_experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_diplome",
+              "displayName": "score_diplome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_metier",
+              "displayName": "score_metier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_regles",
+              "displayName": "score_regles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_ia",
+              "displayName": "score_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "score_final",
+              "displayName": "score_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "classement_final",
+              "displayName": "classement_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "resume_ia",
+              "displayName": "resume_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "competences_ia",
+              "displayName": "competences_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "points_forts_ia",
+              "displayName": "points_forts_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "points_faibles_ia",
+              "displayName": "points_faibles_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "recommandation_ia",
+              "displayName": "recommandation_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "modele_ia",
+              "displayName": "modele_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "date_analyse_ia",
+              "displayName": "date_analyse_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "lettre_brouillon",
+              "displayName": "lettre_brouillon",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2240,
+        -480
+      ],
+      "id": "4d4ae3fd-1804-4d93-9c48-06f5468b0bf2",
+      "name": "Update Lettre Brouillon",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "lettres",
+          "mode": "list",
+          "cachedResultName": "lettres"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "version": 1,
+            "offre_id": "={{ $json.offre_id }}",
+            "lettre": "={{ $json.lettre_brouillon }}",
+            "modele_ia": "phi4",
+            "score_final": "={{ $json.score_final }}",
+            "classement_final": "={{ $json.classement_final }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "version",
+              "displayName": "version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lettre",
+              "displayName": "lettre",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modele_ia",
+              "displayName": "modele_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score_final",
+              "displayName": "score_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "classement_final",
+              "displayName": "classement_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_generation",
+              "displayName": "date_generation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2448,
+        -480
+      ],
+      "id": "3ee0cc61-594f-44f1-bef4-645ebd0da413",
+      "name": "Insérer Version Lettre",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "historique_lettres",
+          "mode": "list",
+          "cachedResultName": "historique_lettres"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "offre_id": "={{ $json.offre_id }}",
+            "modele_ia": "phi4",
+            "score_final": "={{ $json.score_final }}",
+            "prompt_utilise": "={{ $('Préparer Prompt LM').item.json.prompt_lm }}",
+            "reponse_ia": "={{ $('Merge LM').item.json.lettre_brouillon }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modele_ia",
+              "displayName": "modele_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score_final",
+              "displayName": "score_final",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt_utilise",
+              "displayName": "prompt_utilise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reponse_ia",
+              "displayName": "reponse_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date_generation",
+              "displayName": "date_generation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2656,
+        -480
+      ],
+      "id": "6f6d2104-82fa-45a3-af1f-3bac3c19e7b1",
+      "name": "Historique LM",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\n\nconst prompt = data.prompt_utilise || '';\nconst lettre = data.reponse_ia || data.lettre_brouillon || 'Lettre non disponible.';\nconst url = $('Merge LM').item.json.url || '#';\n\nfunction extractBetween(startLabel, endLabel) {\n  const start = prompt.indexOf(startLabel);\n  if (start === -1) return '';\n  const contentStart = start + startLabel.length;\n  const end = endLabel ? prompt.indexOf(endLabel, contentStart) : -1;\n\n  return prompt\n    .slice(contentStart, end === -1 ? undefined : end)\n    .trim();\n}\n\nfunction clean(value, fallback) {\n  return (value || '').trim() || fallback;\n}\n\nconst entreprise = clean(\n  data.entreprise || extractBetween('Entreprise :', 'Poste :'),\n  'Entreprise non précisée'\n);\n\nconst titre = clean(\n  data.titre || extractBetween('Poste :', 'Ville :'),\n  'Offre sans titre'\n);\n\nconst ville = clean(\n  data.ville || data.lieu || extractBetween('Ville :', 'Contrat :'),\n  'Ville non précisée'\n);\n\nconst contrat = clean(\n  data.contrat || data.type_contrat_libelle || extractBetween('Contrat :', 'Expérience demandée :'),\n  'Contrat non précisé'\n);\n\nconst experience = clean(\n  data.experience || extractBetween('Expérience demandée :', 'Description :'),\n  'Expérience non précisée'\n);\n\nconst description = clean(\n  data.description || extractBetween('Description :', '====================================================\\nPROFIL CANDIDAT'),\n  'Description non disponible'\n);\n\nconst scoreFinal = data.score_final ?? 'N/A';\n\nlet classement = data.classement_final || 'Non classé';\n\nif (!data.classement_final && typeof data.score_final === 'number') {\n  if (data.score_final >= 90) classement = 'Très pertinent';\n  else if (data.score_final >= 60) classement = 'Pertinent';\n  else if (data.score_final >= 40) classement = 'Moyen';\n  else classement = 'Faible';\n}\n\nconst dateAnalyse =\nnew Date(\n  data.date_generation ||\n  new Date()\n).toLocaleString('fr-FR');\n\nconst emailSubject = `Nouvelle offre pertinente — ${titre} — Score ${scoreFinal}/100`;\n\nconst emailHtml = `\n<div style=\"font-family: Arial, sans-serif; line-height: 1.5; color: #222;\">\n  <h2>Nouvelle offre pertinente détectée</h2>\n\n  <h3>1. Offre</h3>\n  <p>\n    <strong>Poste :</strong> ${titre}<br>\n    <strong>Entreprise :</strong> ${entreprise}<br>\n    <strong>Ville :</strong> ${ville}<br>\n    <strong>Contrat :</strong> ${contrat}<br>\n    <strong>Expérience :</strong> ${experience}\n  </p>\n\n  <h3>2. Score IA</h3>\n\n  <div style=\"\n    padding:12px;\n    background:#e8f5e9;\n    border:1px solid #4caf50;\n    border-radius:6px;\n    font-size:18px;\n  \">\n    <strong>Score :</strong> ${scoreFinal}/100\n    <br><br>\n    <strong>Classement :</strong> ${classement}\n  </div>\n\n  <h3>3. Résumé offre</h3>\n  <div style=\"border-left:4px solid #ccc; padding-left:12px; white-space:pre-line;\">\n${description.slice(0, 800)}\n  </div>\n\n  <h3>4. Lettre de motivation générée</h3>\n  <div style=\"border:1px solid #ddd; padding:12px; background:#f9f9f9; white-space:pre-line;\">\n${lettre}\n  </div>\n\n  <h3>5. Lien offre</h3>\n  <p>\n    <a href=\"${url}\" target=\"_blank\">Ouvrir l'offre France Travail</a>\n  </p>\n\n  <h3>6. Date analyse</h3>\n  <p>${dateAnalyse}</p>\n</div>\n`;\n\nreturn {\n  json: {\n    ...data,\n    titre,\n    entreprise,\n    ville,\n    contrat,\n    experience,\n    url,\n    classement_final: classement,\n    lettre_brouillon: lettre,\n    email_subject: emailSubject,\n    email_html: emailHtml\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        -448
+      ],
+      "id": "d687fb65-286d-42a7-b1f3-6048f68662d7",
+      "name": "Préparer Email Candidature"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.GMAIL_FROM }}",
+        "toEmail": "={{ $env.GMAIL_TO }}",
+        "subject": "={{ $json.email_subject }}",
+        "html": "={{ $json.email_html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2768,
+        -64
+      ],
+      "id": "fd896032-f666-456f-b4e5-1865ff92bd91",
+      "name": "Send an Email1",
+      "webhookId": "b90f83a7-f823-4b15-ab05-c9a97e1f8c96",
+      "alwaysOutputData": false,
+      "credentials": {
+        "smtp": {
+          "id": "8d9UmRPlMc0V0qCb",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "79b269cc-0fc0-4ba4-a3ef-d3e9d6d8f93a",
+              "leftValue": "={{ $json.erreur_ia }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1152,
+        -256
+      ],
+      "id": "a37e9fd1-1ec4-4c04-a334-10eeef64a713",
+      "name": "IF Erreur IA"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9191b6f8-1de8-413a-8d0a-643de6f73faa",
+              "name": "status",
+              "value": "ERREUR_IA",
+              "type": "string"
+            },
+            {
+              "id": "a78e96a2-5d90-4341-a08d-d02705254a39",
+              "name": "type_erreur",
+              "value": "={{ $json.type_erreur_ia }}",
+              "type": "string"
+            },
+            {
+              "id": "a64fcba9-0ce7-4a4d-9495-9cebf7095a21",
+              "name": "message",
+              "value": "={{ $json.message_erreur_ia }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        -560
+      ],
+      "id": "a1fbfde9-07f6-4bed-8d3e-bac59623ff77",
+      "name": "Erreur IA"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "logs_ia",
+          "mode": "list",
+          "cachedResultName": "logs_ia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "duree_ms": 0,
+            "offre_id": "=N/A",
+            "score_ia": "={{ $json.score_ia }}",
+            "prompt_utilise": "=N/A",
+            "reponse_ia": "={{ $json.response }}",
+            "modele_ia": "={{ $json.modele_ia }}",
+            "statut": "={{ $json.erreur_ia ? 'ERREUR' : 'SUCCESS' }}",
+            "type_erreur": "={{ $json.type_erreur_ia }}",
+            "prompt_version": "prompt_analyse_ia_v1"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date_execution",
+              "displayName": "date_execution",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modele_ia",
+              "displayName": "modele_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "duree_ms",
+              "displayName": "duree_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score_ia",
+              "displayName": "score_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_erreur",
+              "displayName": "type_erreur",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt_utilise",
+              "displayName": "prompt_utilise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reponse_ia",
+              "displayName": "reponse_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt_version",
+              "displayName": "prompt_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1360,
+        -224
+      ],
+      "id": "f87ddeef-1d05-4b3f-b813-1b5ab0f1022d",
+      "name": "logs_ia",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let qualite = 'BONNE';\n\nif ($json.statut === 'ERREUR' || $json.type_erreur) {\n  qualite = 'MAUVAISE';\n} else if (($json.score_ia || 0) <= 0) {\n  qualite = 'MOYENNE';\n}\n\nreturn {\n  json: {\n    ...$json,\n    qualite_analyse: qualite\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        192
+      ],
+      "id": "920fbbcf-42dd-473e-946c-9e6870a191e2",
+      "name": "Qualité IA"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "qualite_ia",
+          "mode": "list",
+          "cachedResultName": "qualite_ia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "offre_id": "={{ $json.offre_id || 'N/A' }}",
+            "score_ia": "={{ $json.score_ia }}",
+            "statut": "={{ $json.statut }}",
+            "type_erreur": "={{ $json.type_erreur }}",
+            "qualite_analyse": "={{ $json.qualite_analyse }}",
+            "commentaire": "Mesure automatique qualité IA"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date_mesure",
+              "displayName": "date_mesure",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score_ia",
+              "displayName": "score_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_erreur",
+              "displayName": "type_erreur",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "qualite_analyse",
+              "displayName": "qualite_analyse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "commentaire",
+              "displayName": "commentaire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1504,
+        192
+      ],
+      "id": "8019bac0-9c09-4faf-b902-83d07d2bcaee",
+      "name": "Historique Qualité IA",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "performances_ia",
+          "mode": "list",
+          "cachedResultName": "performances_ia"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "offre_id": "={{ $json.offre_id || 'N/A' }}",
+            "modele_ia": "={{ $json.modele_ia || 'unknown' }}",
+            "duree_ms": "={{ $json.duree_ms || 0 }}",
+            "statut": "={{ $json.statut || 'UNKNOWN' }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date_mesure",
+              "displayName": "date_mesure",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modele_ia",
+              "displayName": "modele_ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "duree_ms",
+              "displayName": "duree_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1712,
+        192
+      ],
+      "id": "b3925351-ce26-4440-89cc-4666efaf4b15",
+      "name": "Historique Performances IA",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const motsCles = 'informatique';\n\n// Période exacte à collecter\nconst dateDebut = '2026-06-01';\nconst dateFin = '2026-06-04';\n\n// Taille page France Travail\nconst pageSize = 150;\n\n// Limite API France Travail : début max = 3000\nconst maxStart = 500;\n\nfunction addDays(date, days) {\n  const d = new Date(date);\n  d.setDate(d.getDate() + days);\n  return d;\n}\n\nfunction formatDate(date) {\n  return date.toISOString().slice(0, 10);\n}\n\nconst items = [];\n\nlet currentDate = new Date(`${dateDebut}T00:00:00Z`);\nconst endDate = new Date(`${dateFin}T00:00:00Z`);\n\nwhile (currentDate <= endDate) {\n  const jour = formatDate(currentDate);\n\n  for (let start = 0; start <= maxStart; start += pageSize) {\n    const end = start + pageSize - 1;\n\n    // Sécurité : on ne dépasse pas 2999\n    if (start >= 3000) break;\n\n    items.push({\n      json: {\n        motsCles,\n        range: `${start}-${end}`,\n        minCreationDate: `${jour}T00:00:00Z`,\n        maxCreationDate: `${jour}T23:59:59Z`\n      }\n    });\n  }\n\n  currentDate = addDays(currentDate, 1);\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        -528
+      ],
+      "id": "83fc56ef-8936-4a16-b4b0-591487e7e26c",
+      "name": "Préparer Pagination France Travail"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "offres_brutes",
+          "mode": "list",
+          "cachedResultName": "offres_brutes"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "debutant_accepte": "={{ $json.debutant_accepte || false }}",
+            "alternance": "={{ $json.alternance || false }}",
+            "contrat_apprentissage": "={{ $json.contrat_apprentissage || false }}",
+            "contrat_professionnalisation": "={{ $json.contrat_professionnalisation || false }}",
+            "date_collecte": "={{ $now }}",
+            "offre_id": "={{ $json.id || $json.offre_id || '' }}",
+            "titre": "={{ $json.intitule || $json.titre || '' }}",
+            "entreprise": "={{ $json.entreprise?.nom || $json.entreprise || '' }}",
+            "ville": "={{ $json.lieuTravail?.libelle || $json.ville || $json.lieu || '' }}",
+            "contrat": "={{ $json.typeContrat || $json.contrat || '' }}",
+            "experience": "={{ $json.experienceLibelle || $json.experience || '' }}",
+            "salaire": "={{ $json.salaire?.libelle || $json.salaire || '' }}",
+            "description": "={{ $json.description || '' }}",
+            "url": "={{ $json.origineOffre?.urlOrigine || $json.url || '' }}",
+            "score_regles": "={{ $json.score_regles || 0 }}"
+          },
+          "matchingColumns": [
+            "offre_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date_collecte",
+              "displayName": "date_collecte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "offre_id",
+              "displayName": "offre_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "titre",
+              "displayName": "titre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "entreprise",
+              "displayName": "entreprise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "ville",
+              "displayName": "ville",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "contrat",
+              "displayName": "contrat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "experience",
+              "displayName": "experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "salaire",
+              "displayName": "salaire",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "score_regles",
+              "displayName": "score_regles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "debutant_accepte",
+              "displayName": "debutant_accepte",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "alternance",
+              "displayName": "alternance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "contrat_apprentissage",
+              "displayName": "contrat_apprentissage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "contrat_professionnalisation",
+              "displayName": "contrat_professionnalisation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        464,
+        -304
+      ],
+      "id": "d2678885-07d4-450b-8ec4-9ceed0b72b61",
+      "name": "Insertion Offres Brutes",
+      "credentials": {
+        "postgres": {
+          "id": "adnCXsoOGKbkXk68",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Token France Travail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "France Travail - Offres": {
+      "main": [
+        [
+          {
+            "node": "Suppression Doublons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse Résultats": {
+      "main": [
+        [
+          {
+            "node": "Structure Simplifiée",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structure Simplifiée": {
+      "main": [
+        [
+          {
+            "node": "Moteur Mots Clés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Suppression Doublons": {
+      "main": [
+        [
+          {
+            "node": "Tri Offres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moteur Mots Clés": {
+      "main": [
+        [
+          {
+            "node": "Score Pertinence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tri Offres": {
+      "main": [
+        [
+          {
+            "node": "Top Offres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Top Offres": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Insertion SQL": {
+      "main": [
+        [
+          {
+            "node": "Insert or update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Pertinence": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Erreur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse IA Ollama": {
+      "main": [
+        [
+          {
+            "node": "Parser Réponse IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token France Travail": {
+      "main": [
+        [
+          {
+            "node": "Préparer Pagination France Travail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Score Règles Candidat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser Réponse IA": {
+      "main": [
+        [
+          {
+            "node": "IF Erreur IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Règles Candidat": {
+      "main": [
+        [
+          {
+            "node": "Filtre Score Règles",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Insertion Offres Brutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtre Score Règles": {
+      "main": [
+        [
+          {
+            "node": "Analyse IA Ollama",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusion Score Final": {
+      "main": [
+        [
+          {
+            "node": "Classement Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classement Final": {
+      "main": [
+        [
+          {
+            "node": "IF Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Qualité IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert or update rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Analyse Résultats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Score": {
+      "main": [
+        [
+          {
+            "node": "Préparer Insertion SQL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge LM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Préparer Prompt LM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Préparer Prompt LM": {
+      "main": [
+        [
+          {
+            "node": "Génération LM Ollama",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Génération LM Ollama": {
+      "main": [
+        [
+          {
+            "node": "Parser LM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser LM": {
+      "main": [
+        [
+          {
+            "node": "Merge LM",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge LM": {
+      "main": [
+        [
+          {
+            "node": "Update Lettre Brouillon",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Lettre Brouillon": {
+      "main": [
+        [
+          {
+            "node": "Insérer Version Lettre",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insérer Version Lettre": {
+      "main": [
+        [
+          {
+            "node": "Historique LM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Historique LM": {
+      "main": [
+        [
+          {
+            "node": "Préparer Email Candidature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Email Candidature": {
+      "main": [
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Erreur IA": {
+      "main": [
+        [
+          {
+            "node": "Erreur IA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "logs_ia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "logs_ia": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qualité IA": {
+      "main": [
+        [
+          {
+            "node": "Historique Qualité IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Historique Qualité IA": {
+      "main": [
+        [
+          {
+            "node": "Historique Performances IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Historique Performances IA": {
+      "main": [
+        [
+          {
+            "node": "Fusion Score Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Pagination France Travail": {
+      "main": [
+        [
+          {
+            "node": "France Travail - Offres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "df82eb4a-bee8-4739-a256-94882030e3cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b10fee663d5659ae57fa70840d61cba0e435e56b8e4ff792608c41ed73405ff9"
+  },
+  "nodeGroups": [],
+  "id": "cSQm4gW1QVFgA7rp",
+  "tags": []
+}
